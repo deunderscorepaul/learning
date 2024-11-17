@@ -35,7 +35,7 @@ namespace VTABLE
 		enum
 		{
 			CREATEMOVE = 5U,
-			MOUSEINPUTENABLED = 16U,
+			MOUSEINPUTENABLED = 19U,
 			FRAMESTAGENOTIFY = 36U,
 		};
 	}
@@ -44,7 +44,7 @@ namespace VTABLE
 	{
 		enum
 		{
-			ISRELATIVEMOUSEMODE = 78U,
+			ISRELATIVEMOUSEMODE = 76U,
 		};
 	}
 }

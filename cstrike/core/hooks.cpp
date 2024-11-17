@@ -120,7 +120,7 @@ bool H::Setup()
 
 	//L_PRINT(LOG_INFO) << CS_XOR("\"OverrideView\" hook has been created");
 
-	if (!hkDrawObject.Create(MEM::FindPattern(SCENESYSTEM_DLL, CS_XOR("48 8B C4 53 41 54 41 55 48 81 EC ? ? ? ? 4D 63 E1")), reinterpret_cast<void*>(&DrawObject)))
+	if (!hkDrawObject.Create(MEM::FindPattern(SCENESYSTEM_DLL, CS_XOR("48 8B C4 48 89 50 10 53")), reinterpret_cast<void*>(&DrawObject)))
 		return false;
 	L_PRINT(LOG_INFO) << CS_XOR("\"DrawObject\" hook has been created");
 
@@ -207,16 +207,20 @@ bool CS_FASTCALL H::CreateMove(CCSGOInput* pInput, int nSlot, bool bActive)
 	if (!I::Engine->IsConnected() || !I::Engine->IsInGame())
 		return bResult;
 
-	CUserCmd* pCmd = SDK::Cmd = pInput->GetUserCmd();
+	SDK::LocalController = CCSPlayerController::GetLocalPlayerController();
+	if (SDK::LocalController == nullptr)
+		return bResult;
+
+	CUserCmdManager* pCmdManager = SDK::LocalController->GetUserCmdManager();
+	if (!pCmdManager)
+		return bResult;
+
+	CUserCmd* pCmd = SDK::Cmd = pCmdManager->GetUserCmd();
 	if (pCmd == nullptr)
 		return bResult;
 
 	CBaseUserCmdPB* pBaseCmd = pCmd->csgoUserCmd.pBaseCmd;
 	if (pBaseCmd == nullptr)
-		return bResult;
-
-	SDK::LocalController = CCSPlayerController::GetLocalPlayerController();
-	if (SDK::LocalController == nullptr)
 		return bResult;
 
 	SDK::LocalPawn = I::GameResourceService->pGameEntitySystem->Get<C_CSPlayerPawn>(SDK::LocalController->GetPawnHandle());
@@ -225,9 +229,9 @@ bool CS_FASTCALL H::CreateMove(CCSGOInput* pInput, int nSlot, bool bActive)
 
 	F::OnCreateMove(pCmd, pBaseCmd, SDK::LocalController);
 
-	CRC::Save(pBaseCmd);
-	if (CRC::CalculateCRC(pBaseCmd) == true)
-		CRC::Apply(pCmd);
+	//CRC::Save(pBaseCmd);
+	//if (CRC::CalculateCRC(pBaseCmd) == true)
+	//	CRC::Apply(pCmd);
 
 	return bResult;
 }
@@ -251,7 +255,7 @@ __int64* CS_FASTCALL H::LevelInit(void* pClientModeShared, const char* szNewMap)
 	const auto oLevelInit = hkLevelInit.GetOriginal();
 	// if global variables are not captured during I::Setup or we join a new game, recapture it
 	if (I::GlobalVars == nullptr)
-		I::GlobalVars = *reinterpret_cast<IGlobalVars**>(MEM::ResolveRelativeAddress(MEM::FindPattern(CLIENT_DLL, CS_XOR("48 89 0D ? ? ? ? 48 89 41")), 0x3, 0x7));
+		I::GlobalVars = *reinterpret_cast<IGlobalVars**>(MEM::ResolveRelativeAddress(MEM::FindPattern(CLIENT_DLL, CS_XOR("48 89 15 ? ? ? ? 48 89 42")), 0x3, 0x7));
 
 	// disable model occlusion
 	I::PVS->Set(false);

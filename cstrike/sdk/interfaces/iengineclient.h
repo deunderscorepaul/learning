@@ -45,23 +45,23 @@ public:
 	{
 		int nIndex = -1;
 
-		MEM::CallVFunc<void, 47U>(this, std::ref(nIndex), 0);
+		MEM::CallVFunc<void, 49U>(this, std::ref(nIndex), 0);
 
 		return nIndex + 1;
 	}
 
 	[[nodiscard]] const char* GetLevelName()
 	{
-		return MEM::CallVFunc<const char*, 56U>(this);
+		return MEM::CallVFunc<const char*, 58U>(this);
 	}
 
 	[[nodiscard]] const char* GetLevelNameShort()
 	{
-		return MEM::CallVFunc<const char*, 57U>(this);
+		return MEM::CallVFunc<const char*, 59U>(this);
 	}
 
 	[[nodiscard]] const char* GetProductVersionString()
 	{
-		return MEM::CallVFunc<const char*, 82U>(this);
+		return MEM::CallVFunc<const char*, 84U>(this);
 	}
 };

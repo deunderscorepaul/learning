@@ -258,11 +258,13 @@ static_assert(sizeof(CInButtonState) == 0x20);
 class CUserCmd
 {
 public:
-	MEM_PAD(0x8); // 0x0 VTABLE
+	void* pVTable; // 0x0
 	MEM_PAD(0x10); // TODO: find out what this is, added 14.08.2024
-	CCSGOUserCmdPB csgoUserCmd; // 0x18
-	CInButtonState nButtons; // 0x58
-	MEM_PAD(0x20); // 0x78
+	CCSGOUserCmdPB csgoUserCmd; // 0x8
+	CInButtonState nButtons; // 0x28
+	MEM_PAD(0x10); // 0x48
+	bool m_bHasBeenPredicted; // 0x58
+	MEM_PAD(0xF); // 0x59
 
 	CCSGOInputHistoryEntryPB* GetInputHistoryEntry(int nIndex)
 	{
@@ -286,3 +288,17 @@ public:
 	}
 };
 static_assert(sizeof(CUserCmd) == 0x98);
+
+class CUserCmdManager
+{
+public:
+	CUserCmd arrCommands[150];
+	MEM_PAD(752);
+	int nSequenceNumber;
+	int nPreviousSequenceNumber;
+
+	CUserCmd* GetUserCmd()
+	{
+		return &arrCommands[nSequenceNumber % 150];
+	}
+};

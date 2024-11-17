@@ -13,6 +13,8 @@
 #include "../utilities/log.h"
 // used: vector_t
 #include "datatypes/vector.h"
+// used: usercmd
+#include "datatypes/usercmd.h"
 // used: qangle_t
 #include "datatypes/qangle.h"
 // used: ctransform
@@ -260,6 +262,7 @@ public:
 	SCHEMA_ADD_FIELD(QAngle_t, GetAimPuchAngle, "C_CSPlayerPawn->m_aimPunchAngle");
 };
 
+
 class CBasePlayerController : public C_BaseModelEntity
 {
 public:
@@ -269,6 +272,13 @@ public:
 	SCHEMA_ADD_FIELD(std::uint32_t, GetTickBase, "CBasePlayerController->m_nTickBase");
 	SCHEMA_ADD_FIELD(CBaseHandle, GetPawnHandle, "CBasePlayerController->m_hPawn");
 	SCHEMA_ADD_FIELD(bool, IsLocalPlayerController, "CBasePlayerController->m_bIsLocalPlayerController");
+
+	CUserCmdManager* GetUserCmdManager()
+	{
+		static auto fnGetUserCmdManager = reinterpret_cast<CUserCmdManager*(__fastcall*)(CBasePlayerController*)>(MEM::FindPattern(CLIENT_DLL, CS_XOR("41 54 41 57 48 83 EC ? 48 8D 54 24")));
+		return fnGetUserCmdManager(this);
+	};
+
 };
 
 // forward decleration

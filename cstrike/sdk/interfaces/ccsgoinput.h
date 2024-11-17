@@ -42,31 +42,27 @@ public:
 	std::int32_t nTargetHandle; //0x0164
 }; //Size:0x0168
 
+
+
 class CCSGOInput
 {
 public:
-	MEM_PAD(0x250);
-	CUserCmd arrCommands[MULTIPLAYER_BACKUP];
-	MEM_PAD(0x99)
-	bool bInThirdPerson;
-	MEM_PAD(0x6);
-	QAngle_t angThirdPersonAngles;
-	MEM_PAD(0xE);
-	std::int32_t nSequenceNumber;
-	double dbSomeTimer;
-	CExtendedMoveData currentMoveData;
-	std::int32_t nWeaponSwitchTick;
-	MEM_PAD(0x1C4);
-	CExtendedMoveData* pExtendedMoveData;
-	MEM_PAD(0x48);
-	int32_t nAttackStartHistoryIndex1;
-	int32_t nAttackStartHistoryIndex2;
-	int32_t nAttackStartHistoryIndex3;
+	MEM_PAD(0x251); //0x0000
+	bool m_bInThirdPerson; //0x0251
+	MEM_PAD(0x6); //0x0252
+	QAngle_t m_angThirdPersonAngles; //0x0258
+	MEM_PAD(20); //0x0264
+	MEM_PAD(0x20);
+	CExtendedMoveData m_CurrentMoveData;
+	MEM_PAD(0x230); //0x03DC
+	std::int8_t m_nMouseisIntialized; //0x060C
+	std::int8_t m_bInAttack; //0x060D
+	std::int8_t m_bInAttack2; //0x060E
+	std::int8_t N00000135; //0x060F
+	int32_t m_nAttackStartHistoryIndex3; //0x5508
+	int32_t m_nAttackStartHistoryIndex1; //0x550C
+	int32_t m_nAttackStartHistoryIndex2; //0x5510
 
-	CUserCmd* GetUserCmd()
-	{
-		return &arrCommands[nSequenceNumber % MULTIPLAYER_BACKUP];
-	}
 
 	void SetViewAngle(QAngle_t& angView)
 	{
